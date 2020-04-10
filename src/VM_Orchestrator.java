@@ -96,7 +96,7 @@ public class VM_Orchestrator {
 	public static boolean parseCommand(PrintWriter output, String input) {
 		//TODO: Write command parser. All command data will come in as input string, the current code works
 		//input string should be in json format but the code doesn't currently enforce it for testing with telnet
-		output.println("Command: " + input + " recieved");
+		output.println("Command: " + input + " received");
 		return true;
 	}
 }
