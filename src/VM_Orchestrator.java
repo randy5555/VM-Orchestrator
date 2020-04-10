@@ -11,8 +11,8 @@ public class VM_Orchestrator {
 	static String SQLip;
 	static String SQLuser;
 	static String SQLpass;
-	static String welcomeMessage = "Connected! Enter 'exit' to shutdown orchestrator";
-	static String closedMessage = "Connection Closed...";
+	final static String welcomeMessage = "Connected! Enter 'exit' to shutdown orchestrator";
+	final static String closedMessage = "Connection Closed...";
 	
     public static void main(String[] args) {
         if(getConfig()) {
