@@ -9,7 +9,9 @@ import java.util.Scanner;
  *
  */
 public class VM_Orchestrator {
-	
+	/*
+	 * Remember not to commit any configuration login or password to github, as it is public!
+	 * */
 	//System variables
 	static int port = 9991; //default port, changes with config file
 	static String SQLip;
