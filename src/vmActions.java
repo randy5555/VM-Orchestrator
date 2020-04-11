@@ -77,7 +77,18 @@ public class vmActions {
 	 *
 	 */
 	public boolean defineVM(String XMLdefinition) {
+		//create disk image
 		//virsh define x
+		return true;
+	}
+	
+	public String createDiskImage(String VMname, float SizeInGB) {
+		//generate the path to the disk image, then create it.
+		return VMname;
+		
+	}
+	
+	public boolean deleteDiskImage(String path) {
 		return true;
 	}
 }
