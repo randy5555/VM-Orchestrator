@@ -4,6 +4,10 @@ import java.net.Socket;
 import java.util.Base64;
 import java.util.Scanner;
 
+/**
+ * Manages Virtual Machines on a linux system.
+ *
+ */
 public class VM_Orchestrator {
 	
 	//System variables
@@ -61,8 +65,8 @@ public class VM_Orchestrator {
 
 	public static void startServer() {
         try(ServerSocket serverSocket = new ServerSocket(port)) {
-            Socket connectionSocket = serverSocket.accept();
-
+            Socket connectionSocket = serverSocket.accept();//needs to be in a loop
+            
             //Create Input&Outputstreams for the connection
             InputStream inputToServer = connectionSocket.getInputStream();
             OutputStream outputFromServer = connectionSocket.getOutputStream();
@@ -92,6 +96,7 @@ public class VM_Orchestrator {
             e.printStackTrace();
         }
     }
+	
 	
 	public static boolean parseCommand(PrintWriter output, String input) {
 		//TODO: Write command parser. All command data will come in as input string, the current code works
