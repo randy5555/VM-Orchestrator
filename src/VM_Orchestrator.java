@@ -3,7 +3,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,25 +10,22 @@ import com.google.gson.*;
 
 /**
  * Manages Virtual Machines on a linux system.
+ * 
+ * Orchestrator returns JSON through the connected port. Return types are
+	 * {"Response":"RunningVMs", Count: 3, "RunningVMs":["x","y","z"]}
+	 * {"Response":"Error", "ErrorMessage":"x"}
+	 * {"Response":"Success"}
+	 * {"Response":"Connected"}
+	 * {"Response":"Disconnected"}
  *
  */
 public class VM_Orchestrator {
 	/*
 	 * Remember not to commit any configuration login or password to github, as it is public!
 	 * 
-	 * Orchestrator returns JSON through the connected port. Return types are
-	 * {"Response":"RunningVMs", Count: 3, "RunningVMs":["x","y","z"]}
-	 * {"Response":"Error", "ErrorMessage":"x"}
-	 * {"Response":"Success"}
-	 * {"Response":"Connected"}
-	 * {"Response":"Disconnected"}
-	 * 
 	 * */
 	//System variables
 	static int port = 9991; //default port, changes with config file
-	static String SQLip;
-	static String SQLuser;
-	static String SQLpass;
 	final static String welcomeMessage = "{\"Response\":\"Connected\"}";
 	final static String closedMessage = "{\"Response\":\"Disconnected\"}";
 	final static String successMessage = "{\"Response\":\"Success\"}";
@@ -37,9 +33,7 @@ public class VM_Orchestrator {
 	//Configuration list map, Map of <config name, switch position>
 	static Map<String, Integer> configList = new HashMap<String, Integer> (
 			Map.ofEntries(
-					new AbstractMap.SimpleEntry<String, Integer>("port", 0),    
-					new AbstractMap.SimpleEntry<String, Integer>("SQLip", 1),
-					new AbstractMap.SimpleEntry<String, Integer>("SQLlogin", 2)
+					new AbstractMap.SimpleEntry<String, Integer>("port", 0)
 			)
 	);
 	
@@ -90,49 +84,40 @@ public class VM_Orchestrator {
 			case 0:
 				port = Integer.parseInt(configArray[1]);
 				break;
-			case 1:
-				SQLip = configArray[1];
-				break;
-			case 2:
-				byte[] decodedBytes = Base64.getDecoder().decode(configArray[1]);
-				String decodedString = new String(decodedBytes);
-				String[] userArray = decodedString.split(":");
-				SQLuser = userArray[0];
-				SQLpass = userArray[1];
 		}
 	}
 
 	private static void startServer() {
-        try(ServerSocket serverSocket = new ServerSocket(port)) {
-            Socket connectionSocket = serverSocket.accept();
-
-            //Create Input&Outputstreams for the connection
-            InputStream inputToServer = connectionSocket.getInputStream();
-            OutputStream outputFromServer = connectionSocket.getOutputStream();
-
-            Scanner scanner = new Scanner(inputToServer, "UTF-8");
-            PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(outputFromServer, "UTF-8"), true);
-            
-            //Welcome message
-            serverPrintOut.println(welcomeMessage);
-
-            boolean exit = false;
-
-            while(!exit && scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if(parseCommand(serverPrintOut, line)) {
-                    exit = true;
-                    serverPrintOut.println(closedMessage);
-                    serverPrintOut.close();
-                    scanner.close();
-                    System.exit(0);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try(ServerSocket serverSocket = new ServerSocket(port)) {
+			Socket connectionSocket = serverSocket.accept();
+			
+			//Create Input/Output streams
+			InputStream inputToServer = connectionSocket.getInputStream();
+			OutputStream outputFromServer = connectionSocket.getOutputStream();
+			
+			Scanner scanner = new Scanner(inputToServer, "UTF-8");
+			PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(outputFromServer, "UTF-8"), true);
+			
+			//Welcome message
+			serverPrintOut.println(welcomeMessage);
+			
+			boolean exit = false;
+			
+			while(!exit && scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				
+				if(parseCommand(serverPrintOut, line)) {
+					exit = true;
+					serverPrintOut.println(closedMessage);
+					serverPrintOut.close();
+					scanner.close();
+					System.exit(0);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static boolean parseCommand(PrintWriter output, String input) {
 		boolean exit = false;
