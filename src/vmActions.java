@@ -40,8 +40,15 @@ public class vmActions {
 	 * A virtual machine can be in an off state, start it with this command.
 	 *
 	 */
-	public boolean startVM(String VMname) {
+	public boolean startVM(String VMname) throws Exception{
 		//virsh start x
+		SystemCommand cmd = new SystemCommand();
+
+		String result = cmd.executeCommand("virsh start "+VMname);
+		BufferedReader reader = new BufferedReader(new StringReader(result));
+		String line = reader.readLine();
+		//System.out.println(line);
+		//return line.contains("started")?true:false;
 		return true;
 	}
 	
@@ -49,8 +56,15 @@ public class vmActions {
 	 * Gently stop/shutdown a vm, like pushing power button, windows shuts down sort of deal.
 	 *
 	 */
-	public boolean shutdownVM(String VMname) {
+	public boolean shutdownVM(String VMname) throws Exception{
 		//virsh shutdown x
+		SystemCommand cmd = new SystemCommand();
+		String result;
+		result = cmd.executeCommand("virsh shutdown "+VMname);
+		BufferedReader reader = new BufferedReader(new StringReader(result));
+		String line = reader.readLine();
+		//System.out.println(line);
+		//return line.contains("is being shutdown")?true:false;
 		return true;
 	}
 	
@@ -58,8 +72,15 @@ public class vmActions {
 	 * Forcefully stop a vm, pulling the power plug.
 	 *
 	 */
-	public boolean destroyVM(String VMname) {
+	public boolean destroyVM(String VMname) throws Exception{
 		//virsh destroy x
+		SystemCommand cmd = new SystemCommand();
+		String result;
+		result = cmd.executeCommand("virsh destroy "+VMname);
+		BufferedReader reader = new BufferedReader(new StringReader(result));
+		String line = reader.readLine();
+		//System.out.println(line);
+		//return line.contains("destroyed")?true:false;
 		return true;
 	}
 	
