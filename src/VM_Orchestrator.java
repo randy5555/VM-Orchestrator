@@ -31,9 +31,9 @@ public class VM_Orchestrator {
 	final static String successMessage = "{\"Response\":\"Success\"}";
 	
 	//Configuration list map, Map of <config name, switch position>
-	static Map<String, Integer> configList = new HashMap<String, Integer> (
+	static Map<String, Object> configList = new HashMap<String, Object> (
 			Map.ofEntries(
-					new AbstractMap.SimpleEntry<String, Integer>("port", 0)
+					new AbstractMap.SimpleEntry<String, Object>("port", (Integer)0)
 			)
 	);
 	
@@ -53,14 +53,22 @@ public class VM_Orchestrator {
 	);
 	
     public static void main(String[] args) {
-        if(getConfig()) {
+    	
+    	String config_path = "src/config.cfg";
+    	if(args.length >= 1) {
+    		config_path = args[0];
+    	}
+        if(loadConfig(config_path)) {
         	startServer();
         }
     }
     	
-    private static boolean getConfig() {
+    /**
+     * Loads and parses configuration file.
+     */
+    private static boolean loadConfig(String config_path) {
     	try {
-    	      File config = new File("src/config.cfg");
+    	      File config = new File(config_path);
     	      Scanner configReader = new Scanner(config);
     	      while (configReader.hasNextLine()) {
     	        String setting = configReader.nextLine();
@@ -71,7 +79,7 @@ public class VM_Orchestrator {
     	      configReader.close();
     	      return true;
     	    } catch (FileNotFoundException e) {
-    	      System.out.println("Error: No config file!");
+    	    	Util.println("Error: No config file!");
     	      return false;
     	    }
 	}
@@ -80,14 +88,18 @@ public class VM_Orchestrator {
 		setting = setting.replaceAll(" ", "");
 		String[] configArray = setting.split("=");
 		
-		switch(configList.get(configArray[0])) {
-			case 0:
-				port = Integer.parseInt(configArray[1]);
-				break;
+		if(configList.get(configArray[0]) instanceof Integer) {
+			configList.put(configArray[0], Integer.parseInt(configArray[1]));
+		} else {
+			configList.put(configArray[0], configArray[1]);
 		}
+		
+		
 	}
 
 	private static void startServer() {
+		port = (Integer)configList.get("port");
+		
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
 			Socket connectionSocket = serverSocket.accept();
 			
@@ -99,7 +111,7 @@ public class VM_Orchestrator {
 			PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(outputFromServer, "UTF-8"), true);
 			
 			//Welcome message
-			serverPrintOut.println(welcomeMessage);
+			//serverPrintOut.println(welcomeMessage);
 			
 			boolean exit = false;
 			
@@ -115,17 +127,20 @@ public class VM_Orchestrator {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Util.println("Error: Unable to start a server on port " + port);
 		}
 	}
 	
 	public static boolean parseCommand(PrintWriter output, String input) {
 		boolean exit = false;
 		Command command = new Command();
+		
 		try {
 			command = new Gson().fromJson(input, Command.class);
+			
 			if(commandList.containsKey(command.getCommand())) {
 			if(commandList.get(command.getCommand()) == command.getParamNum()) {
+				
 				vmActions control = new vmActions();
 				switch(command.getCommand()) {
 				case "getRunningVMs":
@@ -133,40 +148,60 @@ public class VM_Orchestrator {
 						output.println(buildRunningVM_JSON(control.getRunningVMs()));
 					} catch (Exception e) {
 						output.println(buildErrorJson(e.toString()));
-						e.printStackTrace();
 					}
 					break;
 				case "startVM":
-					if(control.startVM(command.getParam(0))) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
+					if(control.startVM(command.getParam(0))) {
+						output.println(successMessage);
+					} else {
+						output.println(buildErrorJson("Failed to start VM"));
+					}
 					break;
 				case "shutdownVM":
-					if(control.shutdownVM(command.getParam(0))) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
+					if(control.shutdownVM(command.getParam(0))) {
+						output.println(successMessage);
+					} else {
+						output.println(buildErrorJson("Failed to shutdown VM"));
+					}
 					break;
 				case "destroyVM":
-					if(control.destroyVM(command.getParam(0))) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
+					if(control.destroyVM(command.getParam(0))) {
+						output.println(successMessage);
+					} else {
+						output.println(buildErrorJson("Failed to destroy VM"));
+					}
 					break;
 				case "undefineVM":
-					if(control.undefineVM(command.getParam(0))) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
+					if(control.undefineVM(command.getParam(0))) {
+						output.println(successMessage);
+					} else {
+						output.println(buildErrorJson("Failed to undefine VM"));
+					}
 					break;
 				case "defineVM":
-					XMLdefinition newXML = new XMLdefinition();
-					//TODO insert correct parameters into the below function using control.getParam(x), control.getParam(y) etc.
-					String XML = newXML.getVMCreationXML();
-					if(control.defineVM(XML)) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
+					String vmName = command.getParam(0);
+					Integer memoryKB = Integer.parseInt(command.getParam(1));
+					Integer nCPUs = Integer.parseInt(command.getParam(2));
+					Integer OSID = Integer.parseInt(command.getParam(3));
+					Integer VNCPort = Integer.parseInt(command.getParam(4));
+					Float diskSizeGB = Float.parseFloat(command.getParam(5));
+					
+					XMLdefinition newXML = new XMLdefinition(vmName, memoryKB, nCPUs, OSImages.getOSImageName(OSID), VNCPort, diskSizeGB);
+
+					if(control.defineVM(newXML)) {
+						output.println(successMessage);
+					} else {
+						output.println(buildErrorJson("Failed to define VM"));
+					}
 					break;
-				case "createDiskImage":
-					if(control.createDiskImage(command.getParam(0), Float.parseFloat(command.getParam(1))).compareTo(command.getParam(0)) == 0) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
-					break;
-				case "deleteDiskImage":
-					if(control.deleteDiskImage(command.getParam(0))) output.println(successMessage);
-					else output.println(buildErrorJson("Failed to start VM"));
-					break;
+//				case "createDiskImage":
+//					if(control.createDiskImage(command.getParam(0), Float.parseFloat(command.getParam(1))).compareTo(command.getParam(0)) == 0) output.println(successMessage);
+//					else output.println(buildErrorJson("Failed to start VM"));
+//					break;
+//				case "deleteDiskImage":
+//					if(control.deleteDiskImage(command.getParam(0))) output.println(successMessage);
+//					else output.println(buildErrorJson("Failed to start VM"));
+//					break;
 				case "exit":
 					exit = true;
 					break;
