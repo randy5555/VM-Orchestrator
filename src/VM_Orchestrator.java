@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,9 +102,23 @@ public class VM_Orchestrator {
 		port = (Integer)configList.get("port");
 		
 		try(ServerSocket serverSocket = new ServerSocket(port)) {
-			Socket connectionSocket = serverSocket.accept();
-			
-			//Create Input/Output streams
+			while(!serverSocket.isClosed()) {
+				Socket connectionSocket = serverSocket.accept();
+				SocketAddress remoteAddress = connectionSocket.getRemoteSocketAddress();
+				if(remoteAddress != null) {
+					Util.println("New connection accepted from " + remoteAddress.toString());
+				}
+				new Thread(() -> handleConnection(connectionSocket)).start();
+			}
+			Util.println("Server socket was closed.");
+		} catch (IOException e) {
+			Util.println("Error: Unable to start a server on port " + port);
+		}
+	}
+	
+	private static void handleConnection(Socket connectionSocket) {
+		//Create Input/Output streams
+		try {
 			InputStream inputToServer = connectionSocket.getInputStream();
 			OutputStream outputFromServer = connectionSocket.getOutputStream();
 			
@@ -115,7 +130,7 @@ public class VM_Orchestrator {
 			
 			boolean exit = false;
 			
-			while(!exit && scanner.hasNextLine()) {
+			while(!exit && connectionSocket.isConnected() && scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				
 				if(parseCommand(serverPrintOut, line)) {
@@ -123,12 +138,17 @@ public class VM_Orchestrator {
 					serverPrintOut.println(closedMessage);
 					serverPrintOut.close();
 					scanner.close();
-					System.exit(0);
+					inputToServer.close();
+					connectionSocket.close();
 				}
 			}
 		} catch (IOException e) {
-			Util.println("Error: Unable to start a server on port " + port);
+			Util.println("Error: a failure on a client connection occured.");
 		}
+		if(!connectionSocket.isClosed()) {
+			try {connectionSocket.close();}catch(IOException e) {}//make sure socket is closed.
+		}
+		Util.println("Connection exited.");
 	}
 	
 	public static boolean parseCommand(PrintWriter output, String input) {
