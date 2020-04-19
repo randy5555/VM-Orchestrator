@@ -5,8 +5,51 @@ import java.util.UUID;
  *
  */
 public class XMLdefinition {
-	public XMLdefinition() {
-		
+	String name;
+	int memoryKB;
+	int cpus;
+	String os;
+	int port;
+	float diskSizeGB;
+	String uuid;
+	
+	public final String getName() {
+		return name;
+	}
+
+	public final int getMemoryKB() {
+		return memoryKB;
+	}
+
+	public final int getCPUs() {
+		return cpus;
+	}
+
+	public final String getOS() {
+		return os;
+	}
+
+	public final int getPort() {
+		return port;
+	}
+
+	public final float getDiskSizeGB() {
+		return diskSizeGB;
+	}
+
+	public final String getUUID() {
+		return uuid;
+	}
+	
+	
+	public XMLdefinition(String name, int memoryKB, int cpus, String os, int port, float diskSizeGB) {
+		this.name = name;
+		this.memoryKB = memoryKB;
+		this.cpus = cpus;
+		this.os = os;
+		this.port = port;
+		this.diskSizeGB = diskSizeGB;
+		uuid = UUID.randomUUID().toString();
 	}
 	
 	String creationXMLTemplate = "<domain type='kvm'>\r\n" + 
@@ -97,11 +140,10 @@ public class XMLdefinition {
 	 * Generate an xml file for creation of virtual machines.
 	 *
 	 */
-	public String getVMCreationXML(String name, int memory, int cpus, String os, int port) {
-		String uuid = UUID.randomUUID().toString();
-		int port1 = port;
-		int port2 = port+1;
-		String xml = String.format(creationXMLTemplate,name,uuid,memory,name,os,port1,port2);
+	public String getVMCreationXML() {
+		int port1 = getPort();
+		int port2 = getPort() + 1;
+		String xml = String.format(creationXMLTemplate,getName(),getUUID(),getMemoryKB(),getName(),getOS(),port1,port2);
 		
 		return xml;
 	}
