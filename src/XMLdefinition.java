@@ -143,7 +143,7 @@ public class XMLdefinition {
 	public String getVMCreationXML() {
 		int port1 = getPort();
 		int port2 = getPort() + 1;
-		String xml = String.format(creationXMLTemplate,getName(),getUUID(),getMemoryKB(),getName(),getOS(),port1,port2);
+		String xml = String.format(creationXMLTemplate,getName(),getUUID(),getMemoryKB(),getCPUs(),getName(),getOS(),port1,port2);
 		
 		return xml;
 	}
