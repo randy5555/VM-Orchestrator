@@ -51,6 +51,7 @@ public class vmActions {
 		try {
 			result = cmd.executeCommand("virsh start " + VMname);
 			BufferedReader reader = new BufferedReader(new StringReader(result));
+			@SuppressWarnings("unused")
 			String line = reader.readLine();
 			//Do something with line. Not all commands give a response. Not important for these at the moment.
 		} catch (Exception e) {
@@ -69,6 +70,7 @@ public class vmActions {
 		try {
 		result = cmd.executeCommand("virsh shutdown "+VMname);
 		BufferedReader reader = new BufferedReader(new StringReader(result));
+		@SuppressWarnings("unused")
 		String line = reader.readLine();
 		//Do something with line. Not all commands give a response. Not important for these at the moment.
 		} catch (Exception e) {
@@ -88,6 +90,7 @@ public class vmActions {
 		try {
 		result = cmd.executeCommand("virsh destroy "+VMname);
 		BufferedReader reader = new BufferedReader(new StringReader(result));
+		@SuppressWarnings("unused")
 		String line = reader.readLine();
 		//Do something with line. Not all commands give a response. Not important for these at the moment.
 		} catch (Exception e) {
@@ -107,6 +110,7 @@ public class vmActions {
 		try {
 		result = cmd.executeCommand("virsh undefine "+VMname);
 		BufferedReader reader = new BufferedReader(new StringReader(result));
+		@SuppressWarnings("unused")
 		String line = reader.readLine();
 		//Do something with line. Not all commands give a response. Not important for these at the moment.
 		} catch (Exception e) {
@@ -145,6 +149,7 @@ public class vmActions {
 		try {
 			result = cmd.executeCommand(img_create);
 			BufferedReader reader = new BufferedReader(new StringReader(result));
+			@SuppressWarnings("unused")
 			String line = reader.readLine();
 			//Do something with line. Not all commands give a response. Not important for these at the moment.
 			} catch (Exception e) {
@@ -170,6 +175,7 @@ public class vmActions {
 		try {
 			result = cmd.executeCommand(img_create);
 			BufferedReader reader = new BufferedReader(new StringReader(result));
+			@SuppressWarnings("unused")
 			String line = reader.readLine();
 			//Do something with line. Not all commands give a response. Not important for these at the moment.
 			} catch (Exception e) {

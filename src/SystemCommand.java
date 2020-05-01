@@ -2,15 +2,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class for executing external system commands.
  *
  */
 public class SystemCommand {
-	int lastExitCode = 0;
+	boolean lastExitCode = false;
 	
-	public final int getLastExitCode() {
+	public final boolean getLastExitCode() {
 		return lastExitCode;
 	}
 
@@ -35,7 +36,7 @@ public class SystemCommand {
             }
 			
 			//Wait for the process. Exit code is not that useful, but its saved in case.
-			lastExitCode = process.waitFor();
+			lastExitCode = process.waitFor(8,TimeUnit.SECONDS);
 			
 		} catch (IOException e) {
 			throw new Exception("Command Failure.");

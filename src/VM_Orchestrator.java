@@ -46,7 +46,7 @@ public class VM_Orchestrator {
 					new AbstractMap.SimpleEntry<String, Integer>("shutdownVM", 1),
 					new AbstractMap.SimpleEntry<String, Integer>("destroyVM", 1),
 					new AbstractMap.SimpleEntry<String, Integer>("undefineVM", 1),
-					new AbstractMap.SimpleEntry<String, Integer>("defineVM", 1),
+					new AbstractMap.SimpleEntry<String, Integer>("defineVM", 6),
 					new AbstractMap.SimpleEntry<String, Integer>("createDiskImage", 2),
 					new AbstractMap.SimpleEntry<String, Integer>("deleteDiskImage", 1),
 					new AbstractMap.SimpleEntry<String, Integer>("exit", 0)
@@ -162,7 +162,9 @@ public class VM_Orchestrator {
 			if(commandList.get(command.getCommand()) == command.getParamNum()) {
 				
 				vmActions control = new vmActions();
-				switch(command.getCommand()) {
+				String s_cmd = command.getCommand();
+				Util.println(s_cmd);
+				switch(s_cmd) {
 				case "getRunningVMs":
 					try {
 						output.println(buildRunningVM_JSON(control.getRunningVMs()));
