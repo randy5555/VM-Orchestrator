@@ -49,7 +49,8 @@ public class VM_Orchestrator {
 					new AbstractMap.SimpleEntry<String, Integer>("defineVM", 6),
 					new AbstractMap.SimpleEntry<String, Integer>("createDiskImage", 2),
 					new AbstractMap.SimpleEntry<String, Integer>("deleteDiskImage", 1),
-					new AbstractMap.SimpleEntry<String, Integer>("exit", 0)
+					new AbstractMap.SimpleEntry<String, Integer>("exit", 0),
+					new AbstractMap.SimpleEntry<String, Integer>("getCPUStats", 1)
 			)
 	);
 	
@@ -215,6 +216,12 @@ public class VM_Orchestrator {
 					} else {
 						output.println(buildErrorJson("Failed to define VM"));
 					}
+					break;
+				case "getCPUStats":
+					String vmName2 = command.getParam(0);
+					LibVirtAPIInterface lvapi = new LibVirtAPIInterface();
+					CpuStats stats = lvapi.getCPUStats(vmName2);
+					output.println(stats.getJSON());
 					break;
 //				case "createDiskImage":
 //					if(control.createDiskImage(command.getParam(0), Float.parseFloat(command.getParam(1))).compareTo(command.getParam(0)) == 0) output.println(successMessage);
