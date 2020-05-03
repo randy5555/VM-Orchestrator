@@ -7,5 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="src/libvirt-0.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
