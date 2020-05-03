@@ -26,8 +26,10 @@ public class LibVirtAPIInterface {
 			Domain testDomain = conn.domainLookupByName(name);
 			VcpuInfo[] cpuinfo = testDomain.getVcpusInfo();
 			for(VcpuInfo cpu : cpuinfo) {
-				cpustats.appendTime(cpu.cpuTime);
-				cpustats.appendCpus(1);
+				if(cpu.state == VcpuInfo.VcpuState.VIR_VCPU_RUNNING) {
+					cpustats.appendTime(cpu.cpuTime);
+					cpustats.appendCpus(1);
+				}
 			}
 		} catch (LibvirtException e) {
             System.out.println("Error in getCPUStats, is domain off?");
