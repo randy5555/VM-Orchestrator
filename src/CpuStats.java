@@ -29,6 +29,6 @@ public class CpuStats {
 	}
 
 	public String getJSON() {
-		return "{\"Response\":\"Success\",\"cpus\":"+cpus+",\"time\":"+time+"}";
+		return "{\"Response\":\"Success\",\"cpus\":"+getCpus()+",\"time\":"+getTime()+"}";
 	}
 }
