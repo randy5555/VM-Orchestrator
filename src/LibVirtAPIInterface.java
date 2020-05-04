@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import org.libvirt.*;
+
 
 import StatisticsTypes.CpuStats;
 import StatisticsTypes.DiskIOStats;
@@ -70,13 +74,44 @@ public class LibVirtAPIInterface {
 	}
 	
 	public NetworkIOStats getNetworkStats(String name) {
-		return null;
-		
+		try {
+			Domain testDomain = conn.domainLookupByName(name);
+			
+	        long rx = 0;
+	        long tx = 0;
+	        
+	        final DomainInterfaceStats ifStats = testDomain.interfaceStats("vnet2");
+            rx += ifStats.rx_bytes;
+            tx += ifStats.tx_bytes;
+	         
+	        return new NetworkIOStats(rx,tx);
+			} catch (LibvirtException e) {
+				System.out.println("Error in getNetworkStats, is domain off?");
+				System.out.println(e.getError());
+			}
+		return new NetworkIOStats();
 	}
 	
 	public DiskIOStats getDiskStats(String name) {
-		return null;
+		try {
+			Domain testDomain = conn.domainLookupByName(name);
+			long io_rd = 0;
+            long io_wr = 0;
+            long bytes_rd = 0;
+            long bytes_wr = 0;
+            
+            final DomainBlockStats blockStats = testDomain.blockStats("vda");
+            io_rd += blockStats.rd_req;
+            io_wr += blockStats.wr_req;
+            bytes_rd += blockStats.rd_bytes;
+            bytes_wr += blockStats.wr_bytes;
+            
+			
+		} catch (LibvirtException e) {
+			System.out.println("Error in getDiskStats, is domain off?");
+			System.out.println(e.getError());
+		}
+		return new DiskIOStats();
 		
 	}
-	
 }

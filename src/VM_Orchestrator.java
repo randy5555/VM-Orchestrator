@@ -10,7 +10,9 @@ import java.util.Scanner;
 import com.google.gson.*;
 
 import StatisticsTypes.CpuStats;
+import StatisticsTypes.DiskIOStats;
 import StatisticsTypes.MemStats;
+import StatisticsTypes.NetworkIOStats;
 
 /**
  * Manages Virtual Machines on a linux system.
@@ -54,7 +56,9 @@ public class VM_Orchestrator {
 					new AbstractMap.SimpleEntry<String, Integer>("deleteDiskImage", 1),
 					new AbstractMap.SimpleEntry<String, Integer>("exit", 0),
 					new AbstractMap.SimpleEntry<String, Integer>("getCPUStats", 1),
-					new AbstractMap.SimpleEntry<String, Integer>("getMEMStats", 1)
+					new AbstractMap.SimpleEntry<String, Integer>("getMEMStats", 1),
+					new AbstractMap.SimpleEntry<String, Integer>("getNETStats", 1),
+					new AbstractMap.SimpleEntry<String, Integer>("getDISKStats", 1)
 			)
 	);
 	
@@ -168,6 +172,8 @@ public class VM_Orchestrator {
 				
 				vmActions control = new vmActions();
 				String s_cmd = command.getCommand();
+				String vmName = null;
+				LibVirtAPIInterface lvapi = null;
 				Util.println(s_cmd);
 				switch(s_cmd) {
 				case "getRunningVMs":
@@ -206,7 +212,7 @@ public class VM_Orchestrator {
 					}
 					break;
 				case "defineVM":
-					String vmName = command.getParam(0);
+					vmName = command.getParam(0);
 					Integer memoryKB = Integer.parseInt(command.getParam(1));
 					Integer nCPUs = Integer.parseInt(command.getParam(2));
 					Integer OSID = Integer.parseInt(command.getParam(3));
@@ -222,16 +228,28 @@ public class VM_Orchestrator {
 					}
 					break;
 				case "getCPUStats":
-					String vmName2 = command.getParam(0);
-					LibVirtAPIInterface lvapi = new LibVirtAPIInterface();
-					CpuStats cpustats = lvapi.getCPUStats(vmName2);
+					vmName = command.getParam(0);
+					lvapi = new LibVirtAPIInterface();
+					CpuStats cpustats = lvapi.getCPUStats(vmName);
 					output.println(cpustats.getJSON());
 					break;
 				case "getMEMStats":
-					String vmName3 = command.getParam(0);
-					LibVirtAPIInterface lvapi2 = new LibVirtAPIInterface();
-					MemStats memstats = lvapi2.getMemoryStats(vmName3);
+					vmName = command.getParam(0);
+					lvapi = new LibVirtAPIInterface();
+					MemStats memstats = lvapi.getMemoryStats(vmName);
 					output.println(memstats.getJSON());
+					break;
+				case "getNETStats":
+					vmName = command.getParam(0);
+					lvapi = new LibVirtAPIInterface();
+					NetworkIOStats netstats = lvapi.getNetworkStats(vmName);
+					output.println(netstats.getJSON());
+					break;
+				case "getDiskStats":
+					vmName = command.getParam(0);
+					lvapi = new LibVirtAPIInterface();
+					DiskIOStats diskstats = lvapi.getDiskStats(vmName);
+					output.println(diskstats.getJSON());
 					break;
 //				case "createDiskImage":
 //					if(control.createDiskImage(command.getParam(0), Float.parseFloat(command.getParam(1))).compareTo(command.getParam(0)) == 0) output.println(successMessage);
