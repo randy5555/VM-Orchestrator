@@ -106,7 +106,7 @@ public class LibVirtAPIInterface {
             bytes_rd += blockStats.rd_bytes;
             bytes_wr += blockStats.wr_bytes;
             
-			
+            return new DiskIOStats(io_rd, io_wr, bytes_rd, bytes_wr);
 		} catch (LibvirtException e) {
 			System.out.println("Error in getDiskStats, is domain off?");
 			System.out.println(e.getError());
