@@ -20,4 +20,9 @@ public class NetworkIOStats {
 	public long getRecieve() {
 		return rx;
 	}
+	
+	public String getJSON() {
+		return "{\"Response\":\"Success\",\"tx\":"+getTransmit()+",\"rx\":"+getRecieve()+"}";
+	}
+	
 }

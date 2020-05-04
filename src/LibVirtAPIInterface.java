@@ -1,7 +1,9 @@
 import org.libvirt.*;
 
 import StatisticsTypes.CpuStats;
+import StatisticsTypes.DiskIOStats;
 import StatisticsTypes.MemStats;
+import StatisticsTypes.NetworkIOStats;
 
 
 public class LibVirtAPIInterface {
@@ -61,13 +63,20 @@ public class LibVirtAPIInterface {
 			return new MemStats(total, used);
 		  
 		} catch (LibvirtException e) {
-			System.out.println("Error in getCPUStats, is domain off?");
+			System.out.println("Error in getMemoryStats, is domain off?");
 			System.out.println(e.getError());
 		}
 		return new MemStats();
 	}
 	
+	public NetworkIOStats getNetworkStats(String name) {
+		return null;
+		
+	}
 	
-	
+	public DiskIOStats getDiskStats(String name) {
+		return null;
+		
+	}
 	
 }

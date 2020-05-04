@@ -32,4 +32,8 @@ public class DiskIOStats {
 	public long getWriteBytes() {
 		return writeBytes;
 	}
+	
+	public String getJSON() {
+		return "{\"Response\":\"Success\",\"reads\":"+getReads()+",\"writes\":"+getWrites()+",\"readbytes\":"+getReadBytes()+",\"writebytes\":"+getWriteBytes()+"}";
+	}
 }
