@@ -1,3 +1,4 @@
+package StatisticsTypes;
 public class MemStats {
 	private long total = 0;
 	private long used = 0;

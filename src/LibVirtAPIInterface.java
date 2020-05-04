@@ -1,5 +1,8 @@
 import org.libvirt.*;
 
+import StatisticsTypes.CpuStats;
+import StatisticsTypes.MemStats;
+
 
 public class LibVirtAPIInterface {
 	private static final int NUMMEMSTATS = 13;

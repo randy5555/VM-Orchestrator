@@ -1,3 +1,4 @@
+package StatisticsTypes;
 
 public class CpuStats {
 	private long time = 0;

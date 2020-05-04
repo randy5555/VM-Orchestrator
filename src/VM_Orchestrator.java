@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Scanner;
 import com.google.gson.*;
 
+import StatisticsTypes.CpuStats;
+import StatisticsTypes.MemStats;
+
 /**
  * Manages Virtual Machines on a linux system.
  * 
