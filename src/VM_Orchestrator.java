@@ -227,7 +227,7 @@ public class VM_Orchestrator {
 				case "getMEMStats":
 					String vmName3 = command.getParam(0);
 					LibVirtAPIInterface lvapi2 = new LibVirtAPIInterface();
-					MemStats memstats = lvapi2.getMemoryFreeInKB(vmName3);
+					MemStats memstats = lvapi2.getMemoryStats(vmName3);
 					output.println(memstats.getJSON());
 					break;
 //				case "createDiskImage":

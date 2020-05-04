@@ -2,7 +2,7 @@ import org.libvirt.*;
 
 
 public class LibVirtAPIInterface {
-	private static final int NUMMEMSTATS = 2;
+	private static final int NUMMEMSTATS = 13;
 	private  Connect conn = null;
 	
 	public LibVirtAPIInterface() {
@@ -39,7 +39,7 @@ public class LibVirtAPIInterface {
 		return cpustats;	
 	}
 	
-	public MemStats getMemoryFreeInKB(String name) {
+	public MemStats getMemoryStats(String name) {
 		try {
 			Domain testDomain = conn.domainLookupByName(name);
 			MemoryStatistic[] mems = testDomain.memoryStats(NUMMEMSTATS);
@@ -47,9 +47,15 @@ public class LibVirtAPIInterface {
 				return new MemStats();
 			}
 			DomainInfo info = testDomain.getInfo();
-			long free = mems[0].getValue();
+			long used = 0;
+			for(int i = 0; i < mems.length;i++) {
+				if(mems[i].getTag() == 7) {
+					used = mems[i].getValue();
+				}
+			}
+			
 			long total = info.memory;
-			return new MemStats(total, free);
+			return new MemStats(total, used);
 		  
 		} catch (LibvirtException e) {
 			System.out.println("Error in getCPUStats, is domain off?");
