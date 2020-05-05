@@ -58,6 +58,7 @@ public class LibVirtAPIInterface {
 			for(int i = 0; i < mems.length;i++) {
 				if(mems[i].getTag() == 7) {
 					used = mems[i].getValue();
+					break;
 				}
 			}
 			
