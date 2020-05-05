@@ -36,4 +36,12 @@ public class DiskIOStats {
 	public String getJSON() {
 		return "{\"Response\":\"Success\",\"reads\":"+getReads()+",\"writes\":"+getWrites()+",\"readbytes\":"+getReadBytes()+",\"writebytes\":"+getWriteBytes()+"}";
 	}
+
+	public void add(DiskIOStats vmbLockDeviceStats) {
+		reads += vmbLockDeviceStats.getReads();
+		writes += vmbLockDeviceStats.getWrites();
+		readBytes += vmbLockDeviceStats.getReadBytes();
+		writeBytes += vmbLockDeviceStats.getWriteBytes();
+		
+	}
 }
