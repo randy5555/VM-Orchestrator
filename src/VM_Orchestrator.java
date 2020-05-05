@@ -258,10 +258,27 @@ public class VM_Orchestrator {
 					}
 					output.println(netstats.getJSON());
 					break;
-				case "getDiskStats":
+				case "getDISKStats":
 					vmName = command.getParam(0);
+					
+					DiskIOStats diskstats = new DiskIOStats();
+					ArrayList<String> BlkDevs = null;
+					try {
+						BlkDevs = control.getVMBLockDeviceList(vmName);
+					} catch (Exception e) {
+						output.println(diskstats.getJSON());
+						System.out.println(e);
+						break;
+					}
 					lvapi = new LibVirtAPIInterface();
-					DiskIOStats diskstats = lvapi.getDiskStats(vmName);
+					for(String blk : BlkDevs) {
+						try {
+							diskstats.add(lvapi.getDiskStats(vmName,blk));
+						} catch (Exception e) {
+							System.out.println(e);
+						}
+					}
+					
 					output.println(diskstats.getJSON());
 					break;
 //				case "createDiskImage":

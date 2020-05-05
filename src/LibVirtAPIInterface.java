@@ -91,7 +91,7 @@ public class LibVirtAPIInterface {
 		return new NetworkIOStats();
 	}
 	
-	public DiskIOStats getDiskStats(String name) {
+	public DiskIOStats getDiskStats(String name, String BlockDevice) {
 		try {
 			Domain testDomain = conn.domainLookupByName(name);
 			long io_rd = 0;
@@ -99,7 +99,7 @@ public class LibVirtAPIInterface {
             long bytes_rd = 0;
             long bytes_wr = 0;
             
-            final DomainBlockStats blockStats = testDomain.blockStats("vda");
+            final DomainBlockStats blockStats = testDomain.blockStats(BlockDevice);
             io_rd += blockStats.rd_req;
             io_wr += blockStats.wr_req;
             bytes_rd += blockStats.rd_bytes;
