@@ -230,7 +230,7 @@ public class vmActions {
 			if(count >= 2) {
 				String trimmed = line.trim().replaceAll("\\s{2,}", " ");
 				String[] splitted = trimmed.split(" ");
-				if(splitted.length > 0) {
+				if(splitted.length > 0 && splitted[0].length() > 0) {
 					IfList.add(splitted[0]);
 				}
 			}
