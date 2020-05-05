@@ -21,6 +21,11 @@ public class NetworkIOStats {
 		return rx;
 	}
 	
+	public void add(NetworkIOStats ns) {
+		rx += ns.getRecieve();
+		tx += ns.getTransmit();
+	}
+	
 	public String getJSON() {
 		return "{\"Response\":\"Success\",\"tx\":"+getTransmit()+",\"rx\":"+getRecieve()+"}";
 	}

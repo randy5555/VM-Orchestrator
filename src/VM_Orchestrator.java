@@ -241,8 +241,21 @@ public class VM_Orchestrator {
 					break;
 				case "getNETStats":
 					vmName = command.getParam(0);
+					NetworkIOStats netstats = new NetworkIOStats();
+					ArrayList<String> Ifaces = null;
+					try {
+						Ifaces = control.getVMInterfaceList(vmName);
+					} catch (Exception e) {
+						output.println(netstats.getJSON());
+						System.out.println(e);
+						break;
+					}
+					
 					lvapi = new LibVirtAPIInterface();
-					NetworkIOStats netstats = lvapi.getNetworkStats(vmName);
+					
+					for(String ifc : Ifaces) {
+						netstats.add(lvapi.getNetworkStats(vmName,ifc));
+					}
 					output.println(netstats.getJSON());
 					break;
 				case "getDiskStats":

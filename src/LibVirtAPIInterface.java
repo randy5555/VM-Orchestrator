@@ -72,14 +72,14 @@ public class LibVirtAPIInterface {
 		return new MemStats();
 	}
 	
-	public NetworkIOStats getNetworkStats(String name) {
+	public NetworkIOStats getNetworkStats(String name, String iface) {
 		try {
 			Domain testDomain = conn.domainLookupByName(name);
 			
 	        long rx = 0;
 	        long tx = 0;
 	        
-	        final DomainInterfaceStats ifStats = testDomain.interfaceStats("vnet0");
+	        final DomainInterfaceStats ifStats = testDomain.interfaceStats(iface);
             rx += ifStats.rx_bytes;
             tx += ifStats.tx_bytes;
 	         

@@ -206,4 +206,38 @@ public class vmActions {
 		File file = new File(path); 
 		return file.delete();
 	}
+	
+	/**
+	 * Get the list of network interfaces for a virtual machine on the system.
+	 *
+	 */
+	public ArrayList<String> getVMInterfaceList(String VMname) throws Exception {
+		ArrayList<String> IfList = new ArrayList<String>();
+		SystemCommand cmd = new SystemCommand();
+		
+		String result = cmd.executeCommand("virsh domiflist " + VMname);
+		BufferedReader reader = new BufferedReader(new StringReader(result));
+		String line = reader.readLine();
+		int count = 0;
+		while (line != null) {
+			if(count == 0) {
+				String trimmed = line.trim().replaceAll("\\s{2,}", " ");
+				String[] splitted = trimmed.split(" ");
+				if(splitted[0].compareTo("Interface") != 0) {
+					throw new Exception(line);
+				}
+			}
+			if(count >= 2) {
+				String trimmed = line.trim().replaceAll("\\s{2,}", " ");
+				String[] splitted = trimmed.split(" ");
+				if(splitted.length > 0) {
+					IfList.add(splitted[0]);
+				}
+			}
+			line = reader.readLine();
+			count++;
+		}
+		
+		return IfList;
+	}
 }
