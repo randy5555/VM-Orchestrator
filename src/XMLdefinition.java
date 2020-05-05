@@ -112,7 +112,7 @@ public class XMLdefinition {
 			"	\r\n" + 
 			"		<input type='mouse' bus='ps2'/>\r\n" + 
 			"		<input type='keyboard' bus='ps2'/>\r\n" + 
-			"		<graphics type='vnc' port='%d' websocket='%d' listen='192.168.1.19' passwd='asouihfdiuk' keymap='en-us'/>\r\n" + 
+			"		<graphics type='vnc' port='%d' websocket='%d' listen='::' passwd='asouihfdiuk' keymap='en-us'/>\r\n" + 
 			"		\r\n" + 
 			"		<video>\r\n" + 
 			"			<model type='vmvga' vram='16384' heads='1'>\r\n" + 
