@@ -78,7 +78,7 @@ public class LibVirtAPIInterface {
 	        long rx = 0;
 	        long tx = 0;
 	        
-	        final DomainInterfaceStats ifStats = testDomain.interfaceStats("vnet2");
+	        final DomainInterfaceStats ifStats = testDomain.interfaceStats("vnet0");
             rx += ifStats.rx_bytes;
             tx += ifStats.tx_bytes;
 	         

@@ -85,7 +85,7 @@ public class XMLdefinition {
 			"		<emulator>/usr/bin/kvm</emulator>\r\n" + 
 			"\r\n" + 
 			"		<disk type='file' device='disk'>\r\n" + 
-			"			<driver name='qemu' type='qcow2'/>\r\n" + 
+			"			<driver name='qemu' type='qcow2' cache='none' io='threads' iothread='1'/>\r\n" + 
 			"			<source file='/mnt/vm/boot-disk-%s.img'/>\r\n" + 
 			"			<target dev='vda' bus='virtio'/>\r\n" + 
 			"			<address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>\r\n" + 
